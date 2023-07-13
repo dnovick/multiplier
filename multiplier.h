@@ -6,6 +6,8 @@
 
 namespace Multiplier {
 
+    //TODO: Reuse std iterator concepts or redo this to use concepts syntax.
+
     //https://stackoverflow.com/questions/13830158/check-if-a-variable-type-is-iterable
     template <typename T, typename = void>
     struct is_iterable : std::false_type {};
@@ -22,26 +24,27 @@ namespace Multiplier {
     constexpr bool is_iterable_v = is_iterable<T>::value;
 
 
-    template<typename T>
-    inline auto multiplyElement(const T& elem, size_t count) -> T {
-        
-        static_assert(is_iterable<T>::value);
 
-        T prod;
+    template<typename InColl, typename OutColl = InColl>
+    inline auto multiplyElement(const InColl& coll, size_t count) -> OutColl {
+        
+        static_assert(is_iterable_v<InColl>);
+
+        OutColl prod;
 
         for(auto i = 0U; i < count; i++)
         {
-            prod.insert(prod.end(), elem.begin(), elem.end());
+            prod.insert(prod.end(), coll.begin(), coll.end());
         }
 
         return prod;
 
     }
 
-    template<typename T>
-    inline auto operator*(const T& elem, size_t count) -> T {
+    template<typename InColl, typename OutColl = InColl>
+    inline auto operator*(const InColl& coll, size_t count) -> OutColl {
         
-        return multiplyElement(elem, count);
+        return multiplyElement(coll, count);
     }
 
 } //namespace multiplier
