@@ -26,8 +26,8 @@ class MultiplierTests : public ::testing::Test {
     private:
     
     public:
-        template<typename InColl, typename OutColl = InColl>
-        inline auto productIsValid(const InColl& coll  , size_t count, const OutColl& prod) {
+        template<typename T, typename InColl>
+        inline auto productIsValid(const InColl& coll  , size_t count, const std::vector<T>& prod) {
             bool res = true;
 
             auto inSize = coll.size();
@@ -50,9 +50,9 @@ TEST_F(MultiplierTests, MultiplierTest1) //NOLINT
 
     constexpr size_t COUNT = 5;
 
-    auto res = multiplyElement(str, COUNT);
+    auto res = multiplyElement<std::string>(str, COUNT);
 
-    ASSERT_EQ(std::string {"testtesttesttesttest"}, res);
+    ASSERT_TRUE(productIsValid(str, COUNT, res));
 
 
 }
@@ -69,7 +69,7 @@ TEST_F(MultiplierTests, MultiplierTest2) //NOLINT
 
     ASSERT_EQ(ivec.size(), ELEM_COUNT);
 
-    auto vecProd = multiplyElement(ivec, COUNT);
+    auto vecProd = multiplyElement<std::vector<int>>(ivec, COUNT);
 
 
     ASSERT_EQ(vecProd.size(), ELEM_COUNT * COUNT);
@@ -90,7 +90,7 @@ TEST_F(MultiplierTests, MultiplierTest3) //NOLINT
 
     ASSERT_EQ(ivec.size(), ELEM_COUNT);
 
-    auto vecProd = ivec * COUNT;
+    std::vector<int> vecProd = ivec * COUNT;
 
 
     ASSERT_EQ(vecProd.size(), ELEM_COUNT * COUNT);
@@ -112,7 +112,7 @@ TEST_F(MultiplierTests, MultiplierTest4) //NOLINT
 
     ASSERT_EQ(carr.size(), ELEM_COUNT);
 
-    auto prod = multiplyElement<CharArray, CharVector>(carr, COUNT);
+    auto prod = multiplyElement<CharArray>(carr, COUNT);
 
     ASSERT_EQ(prod.size(), ELEM_COUNT * COUNT);
     
@@ -120,24 +120,22 @@ TEST_F(MultiplierTests, MultiplierTest4) //NOLINT
 
 }
 
-//TODO: Modify the multiplier to enable operator*() with differing input and output collection types.
-// TEST_F(MultiplierTests, MultiplierTest5) //NOLINT
-// {
+TEST_F(MultiplierTests, MultiplierTest5) //NOLINT
+{
     
-//     constexpr size_t ELEM_COUNT = 10;
+    constexpr size_t ELEM_COUNT = 10;
 
-//     constexpr size_t COUNT = 5;
+    constexpr size_t COUNT = 5;
 
 
-//     CharArray carr {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
+    CharArray carr {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
 
-//     ASSERT_EQ(carr.size(), ELEM_COUNT);
+    ASSERT_EQ(carr.size(), ELEM_COUNT);
 
-//     CharVector prod = carr * COUNT;
-//     //auto prod = multiplyElement<CharArray, CharVector>(carr, COUNT);
-
-//     ASSERT_EQ(prod.size(), ELEM_COUNT * COUNT);
+    CharVector prod = carr * COUNT;
     
-//     ASSERT_TRUE(productIsValid(carr, COUNT, prod));
+    ASSERT_EQ(prod.size(), ELEM_COUNT * COUNT);
+    
+    ASSERT_TRUE(productIsValid(carr, COUNT, prod));
 
-// }
+}

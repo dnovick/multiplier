@@ -1,7 +1,9 @@
 #pragma once
 
+#include <__iterator/concepts.h>
 #include <vector>
 #include <span>
+#include <iterator>
 #include <type_traits>
 
 namespace Multiplier {
@@ -25,12 +27,12 @@ namespace Multiplier {
 
 
 
-    template<typename InColl, typename OutColl = InColl>
-    inline auto multiplyElement(const InColl& coll, size_t count) -> OutColl {
+    template<typename InColl>
+    inline auto multiplyElement(const InColl& coll, size_t count) -> std::vector<typename InColl::value_type> {
         
         static_assert(is_iterable_v<InColl>);
 
-        OutColl prod;
+        std::vector<typename InColl::value_type> prod;
 
         for(auto i = 0U; i < count; i++)
         {
@@ -41,8 +43,9 @@ namespace Multiplier {
 
     }
 
-    template<typename InColl, typename OutColl = InColl>
-    inline auto operator*(const InColl& coll, size_t count) -> OutColl {
+    
+    template<typename InColl>
+    inline auto operator*(const InColl& coll, size_t count) -> std::vector<typename InColl::value_type> {
         
         return multiplyElement(coll, count);
     }
